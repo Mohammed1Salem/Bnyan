@@ -22,6 +22,10 @@ public class Meeting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @NotEmpty(message = "meeting topic can not be empty")
+    @Column(columnDefinition = "varchar(255) not null")
+    private String topic;
+
     @NotNull(message = "start date can not be null")
     @Column(columnDefinition = "datetime not null")
     private LocalDateTime startDate;
