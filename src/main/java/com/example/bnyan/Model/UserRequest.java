@@ -20,7 +20,7 @@ public class UserRequest {
     private Integer id;
 
     @NotEmpty(message = "type must be filled")
-    @Pattern(regexp = "^(buy|rent|sell)$", message = "type must be buy or rent or sell")
+    @Pattern(regexp = "^(شراء|إيجار|بيع)$", message = "type must be buy or rent or sell")
     @Column(columnDefinition = "varchar(20) not null")
     private String type;
 

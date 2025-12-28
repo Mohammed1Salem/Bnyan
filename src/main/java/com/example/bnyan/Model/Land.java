@@ -25,14 +25,11 @@ public class Land {
     private String location;
 
     @NotNull(message = "size must be filled")
-    @Column(columnDefinition = "double not null")
-    private Double size;
+    @Column(columnDefinition = "varchar(30) not null")
+    private String size;
 
-    @NotEmpty(message = "authorization status must be filled")
-    @Pattern(regexp = "^(authorized|notAuthorized)$",
-            message = "authorization must be authorized or notAuthorized")
-    @Column(columnDefinition = "varchar(20) not null")
-    private String authorizationStatus;
+    @Column(columnDefinition = "Boolean not null")
+    private Boolean authorizationStatus;
 
     @Column(columnDefinition = "datetime default current_timestamp")
     private LocalDateTime createdAt;

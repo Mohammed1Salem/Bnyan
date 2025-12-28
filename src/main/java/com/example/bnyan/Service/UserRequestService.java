@@ -36,10 +36,10 @@ public class UserRequestService {
         Built built = builtRepository.getBuiltById(builtId);
         if (built == null) throw new ApiException("Built not found");
 
-        if (userRequest.getType().equalsIgnoreCase("buy") && !built.getStatus().equalsIgnoreCase("forSell"))
+        if (userRequest.getType().equalsIgnoreCase("شراء") && !built.getStatus().equalsIgnoreCase("forSell"))
             throw new ApiException("This built is not for sale");
 
-        if (userRequest.getType().equalsIgnoreCase("rent") && !built.getStatus().equalsIgnoreCase("forRent"))
+        if (userRequest.getType().equalsIgnoreCase("إيجار") && !built.getStatus().equalsIgnoreCase("forRent"))
             throw new ApiException("This built is not for rent");
 
         userRequest.setBuilt(built);
@@ -62,7 +62,7 @@ public class UserRequestService {
         userRequestRepository.save(userRequest);
 
         Built built = userRequest.getBuilt();
-        if (userRequest.getType().equalsIgnoreCase("buy") || userRequest.getType().equalsIgnoreCase("rent")) {
+        if (userRequest.getType().equalsIgnoreCase("شراء") || userRequest.getType().equalsIgnoreCase("إيجار")) {
             built.setStatus("owned");
             builtRepository.save(built);
         }
