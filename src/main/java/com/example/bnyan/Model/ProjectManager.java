@@ -20,7 +20,7 @@ public class ProjectManager {
 
     //--------------------------------- relations ------------------------------
 
-    @OneToMany(mappedBy = "manager")
+    @OneToMany(mappedBy = "projectManager")
     private Set<Task> task;
 
     @OneToOne
@@ -28,7 +28,7 @@ public class ProjectManager {
     @JsonIgnore
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "manager")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "projectManager")
     private Set<Project> project;
 
     @OneToMany

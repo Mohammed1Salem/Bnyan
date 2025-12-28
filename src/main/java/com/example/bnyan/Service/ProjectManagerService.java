@@ -60,7 +60,7 @@ public class ProjectManagerService {
         Project project =specialistRequest.getProject();
 
         manager.getProject().add(project);
-        project.setManager(manager);
+        project.setProjectManager(manager);
 
         specialistRequest.setStatus("excepted");
     }

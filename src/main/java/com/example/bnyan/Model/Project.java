@@ -51,7 +51,7 @@ public class Project {
     @ManyToOne
     @MapsId
     @JsonIgnore
-    private ProjectManager manager;
+    private ProjectManager projectManager;
 
     @ManyToOne
     @MapsId

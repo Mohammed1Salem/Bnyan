@@ -55,5 +55,5 @@ public class Task {
 
     @ManyToOne
     @JsonIgnore
-    private ProjectManager manager;
+    private ProjectManager projectManager;
 }

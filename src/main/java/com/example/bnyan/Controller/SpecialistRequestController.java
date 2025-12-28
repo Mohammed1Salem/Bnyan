@@ -27,7 +27,7 @@ public class SpecialistRequestController {
     public ResponseEntity<?> addRequest(@RequestBody @Valid SpecialistRequest request,
                                         @PathVariable Integer projectId,
                                         @PathVariable Integer specialistId) {
-        specialistRequestService.addRequest(request, projectId, specialistId);
+        specialistRequestService.addSpecialistRequest(request, projectId, specialistId);
         return ResponseEntity.status(200).body(new ApiResponse("Specialist request added"));
     }
 
@@ -39,14 +39,16 @@ public class SpecialistRequestController {
 
     @PostMapping("/add-specialist/{project_id}/{spec_id}")
     public ResponseEntity<?> addSpecialistRequest(@PathVariable Integer project_id, @PathVariable Integer spec_id, @RequestBody SpecialistRequest request) {
-        requestService.addSpecialistRequest(request, project_id, spec_id);
+        specialistRequestService.addSpecialistRequest(request, project_id, spec_id);
         return ResponseEntity.ok(new ApiResponse("request added successfully"));
     }
 
     @PostMapping("/add-manager/{project_id}/{manager_id}")
     public ResponseEntity<?> addManagerRequest(@PathVariable Integer project_id, @PathVariable Integer manager_id, @RequestBody SpecialistRequest request) {
-        requestService.addManagerRequest(request, project_id, manager_id);
+        specialistRequestService.addManagerRequest(request, project_id, manager_id);
         return ResponseEntity.ok(new ApiResponse("request added successfully"));
+    }
+
     @PutMapping("/reject/{requestId}")
     public ResponseEntity<?> rejectRequest(@PathVariable Integer requestId) {
         specialistRequestService.rejectRequest(requestId);
