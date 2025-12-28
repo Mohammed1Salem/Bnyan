@@ -26,7 +26,7 @@ public class SpecialistDTO {
     @Pattern(regexp = "^05\\d{8}$", message = "phoneNumber must start with 05 and be 10 digits")
     private String phoneNumber;
 
-    @Pattern(regexp = "^(engneer|Mecanic)$",message = "specialty must be: ")
+    @Pattern(regexp = "^(PROJECT_MANAGER|DESIGNER|MECHANICAL_ENGINEER|CIVIL_ENGINEER|ARCHITECTURE_ENGINEER|CONTRACTOR)$",message = "specialty must be: ")
     private String speciality;
 
 }
