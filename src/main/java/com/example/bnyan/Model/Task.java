@@ -49,11 +49,4 @@ public class Task {
     @JsonIgnore
     private Project project;
 
-    @ManyToOne
-    @JsonIgnore
-    private Specialist specialist;
-
-    @ManyToOne
-    @JsonIgnore
-    private ProjectManager projectManager;
 }
