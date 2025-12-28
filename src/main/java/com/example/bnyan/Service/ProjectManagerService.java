@@ -53,7 +53,7 @@ public class ProjectManagerService {
             throw new ApiException("can not except this request");
         }
 
-        if(manager.getId()!=specialistRequest.getManager().getId()){
+        if(manager.getId()!=specialistRequest.getProjectManager().getId()){
             throw new ApiException("unauthorized to except this request");
         }
 

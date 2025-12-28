@@ -47,5 +47,5 @@ public class SpecialistRequest {
     @ManyToOne
     private Specialist specialist;
     @ManyToOne
-    private ProjectManager manager;
+    private ProjectManager projectManager;
 }

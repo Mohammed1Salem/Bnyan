@@ -20,9 +20,6 @@ public class ProjectManager {
 
     //--------------------------------- relations ------------------------------
 
-    @OneToMany(mappedBy = "projectManager")
-    private Set<Task> task;
-
     @OneToOne
     @MapsId
     @JsonIgnore

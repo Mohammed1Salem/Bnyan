@@ -104,7 +104,7 @@ public class SpecialistRequestService {
 
         request.setProject(project);
         project.getRequests().add(request);
-        request.setManager(manager);
+        request.setProjectManager(manager);
         manager.getRequests().add(request);
 
         projectRepository.save(project);
