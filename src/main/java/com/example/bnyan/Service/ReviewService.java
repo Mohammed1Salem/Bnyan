@@ -41,7 +41,7 @@ public class ReviewService {
             throw new ApiException("Customer not found");
         }
 
-        Specialist specialist = specialistRepository.findSpecialistById(spec_id);
+        Specialist specialist = specialistRepository.findSpecialistById(specialistId);
         if (specialist == null) {
             throw new ApiException("Specialist not found");
         }
@@ -115,24 +115,6 @@ public class ReviewService {
 
         if (reviews.isEmpty()) {
             throw new ApiException("No reviews found for this specialist");
-        }
-
-        return reviews;
-    }
-
-    // Reviews written by a specific customer (Figma: my reviews)
-    public List<Review> getReviewsByCustomer(Integer customerId) {
-
-        Customer customer = customerRepository.getCustomerById(customerId);
-        if (customer == null) {
-            throw new ApiException("Customer not found");
-        }
-
-        List<Review> reviews =
-                reviewRepository.getReviewsByCustomerId(customerId);
-
-        if (reviews.isEmpty()) {
-            throw new ApiException("No reviews found for this customer");
         }
 
         return reviews;

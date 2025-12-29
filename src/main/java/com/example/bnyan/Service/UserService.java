@@ -7,6 +7,7 @@ import com.example.bnyan.Model.User;
 import com.example.bnyan.Repository.CustomerRepository;
 import com.example.bnyan.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,7 +35,8 @@ public class UserService {
 
         User user = new User();
         user.setUsername(customerDTO.getUsername());
-        user.setPassword(customerDTO.getPassword());
+        String hash = new BCryptPasswordEncoder().encode(customerDTO.getPassword());
+        user.setPassword(hash);
         user.setEmail(customerDTO.getEmail());
         user.setPhoneNumber(customerDTO.getPhoneNumber());
         user.setFullName(customerDTO.getFullName());
@@ -47,25 +49,37 @@ public class UserService {
         customerRepository.save(customer);
     }
 
-    public void update(Integer userId, User user) {
-        User old = userRepository.getUserById(userId);
-        if (old == null) throw new ApiException("User not found");
+    public void update(Integer sessionUserId, User user) {
 
-        if (!old.getUsername().equals(user.getUsername()) &&
+        User sessionUser = userRepository.getUserById(sessionUserId);
+        if (sessionUser == null) throw new ApiException("User not found");
+
+        User targetUser = sessionUser;
+
+        if (sessionUser.getRole().equals("ADMIN") && user.getId() != null) {
+            targetUser = userRepository.getUserById(user.getId());
+            if (targetUser == null) throw new ApiException("Target user not found");
+        }
+
+        if (!targetUser.getUsername().equals(user.getUsername()) &&
                 userRepository.getUserByUsername(user.getUsername()) != null)
             throw new ApiException("Username already exists");
 
-        if (!old.getEmail().equals(user.getEmail()) &&
+        if (!targetUser.getEmail().equals(user.getEmail()) &&
                 userRepository.getUserByEmail(user.getEmail()) != null)
             throw new ApiException("Email already exists");
 
-        old.setUsername(user.getUsername());
-        old.setPassword(user.getPassword());
-        old.setEmail(user.getEmail());
-        old.setPhoneNumber(user.getPhoneNumber());
+        targetUser.setUsername(user.getUsername());
+        targetUser.setEmail(user.getEmail());
+        targetUser.setPhoneNumber(user.getPhoneNumber());
 
-        userRepository.save(old);
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            targetUser.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        }
+
+        userRepository.save(targetUser);
     }
+
 
     public void delete(Integer userId) {
         User user = userRepository.getUserById(userId);
