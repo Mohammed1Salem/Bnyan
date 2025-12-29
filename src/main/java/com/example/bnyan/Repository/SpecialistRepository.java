@@ -13,4 +13,5 @@ public interface SpecialistRepository extends JpaRepository<Specialist,Integer> 
 
     List<Specialist> findSpecialistBySpeciality(String speciality);
 
+    Specialist getSpecialistById(Integer id);
 }

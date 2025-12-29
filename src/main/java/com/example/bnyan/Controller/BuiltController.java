@@ -2,10 +2,12 @@ package com.example.bnyan.Controller;
 
 import com.example.bnyan.Api.ApiResponse;
 import com.example.bnyan.Model.Built;
+import com.example.bnyan.Model.User;
 import com.example.bnyan.Service.BuiltService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,23 +22,36 @@ public class BuiltController {
         return ResponseEntity.status(200).body(builtService.get());
     }
 
-    @PostMapping("/add/{userId}")
-    public ResponseEntity<?> add(@PathVariable Integer userId, @RequestBody @Valid Built built) {
-        builtService.add(userId, built);
-        return ResponseEntity.status(200).body(new ApiResponse("Built added"));
+    @PostMapping("/add")
+    public ResponseEntity<?> add(
+            @AuthenticationPrincipal User user,
+            @RequestBody @Valid Built built
+    ) {
+        builtService.add(user.getId(), built);
+        return ResponseEntity.ok(new ApiResponse("Built added"));
     }
 
-    @PutMapping("/update/{builtId}/{userId}")
-    public ResponseEntity<?> update(@PathVariable Integer builtId, @PathVariable Integer userId, @RequestBody @Valid Built built) {
-        builtService.update(builtId, userId, built);
-        return ResponseEntity.status(200).body(new ApiResponse("Built updated"));
+
+    @PutMapping("/update/{builtId}")
+    public ResponseEntity<?> update(
+            @AuthenticationPrincipal User user,
+            @PathVariable Integer builtId,
+            @RequestBody @Valid Built built
+    ) {
+        builtService.update(builtId, user.getId(), built);
+        return ResponseEntity.ok(new ApiResponse("Built updated"));
     }
 
-    @DeleteMapping("/delete/{builtId}/{userId}")
-    public ResponseEntity<?> delete(@PathVariable Integer builtId, @PathVariable Integer userId) {
-        builtService.delete(builtId, userId);
-        return ResponseEntity.status(200).body(new ApiResponse("Built deleted"));
+
+    @DeleteMapping("/delete/{builtId}")
+    public ResponseEntity<?> delete(
+            @AuthenticationPrincipal User user,
+            @PathVariable Integer builtId
+    ) {
+        builtService.delete(builtId, user.getId());
+        return ResponseEntity.ok(new ApiResponse("Built deleted"));
     }
+
 
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<?> getBuiltById(@PathVariable Integer id) {
@@ -58,8 +73,9 @@ public class BuiltController {
         return ResponseEntity.status(200).body(builtService.getBuiltsByLocation(location));
     }
 
-    @GetMapping("/get-by-user-id/{userId}")
-    public ResponseEntity<?> getBuiltsByUserId(@PathVariable Integer userId) {
-        return ResponseEntity.status(200).body(builtService.getBuiltsByUserId(userId));
+    @GetMapping("/get-my-builts")
+    public ResponseEntity<?> getMyBuilts(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(builtService.getBuiltsByUserId(user.getId()));
     }
+
 }

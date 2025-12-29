@@ -7,6 +7,7 @@ import com.example.bnyan.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,12 +27,15 @@ public class UserController {
         userService.registerCustomer(customerDTO);
         return ResponseEntity.status(200).body(new ApiResponse("Customer registered successfully"));
     }
-
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<?> update(@PathVariable Integer userId, @RequestBody @Valid User user) {
-        userService.update(userId, user);
-        return ResponseEntity.status(200).body(new ApiResponse("User updated"));
+    @PutMapping("/update")
+    public ResponseEntity<?> update(
+            @AuthenticationPrincipal User user,
+            @RequestBody @Valid User updatedUser)
+    {
+        userService.update(user.getId(), updatedUser);
+        return ResponseEntity.ok(new ApiResponse("User updated"));
     }
+
 
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<?> delete(@PathVariable Integer userId) {

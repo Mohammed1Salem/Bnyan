@@ -34,13 +34,15 @@ public class BuiltService {
     }
 
     public void update(Integer builtId, Integer userId, Built built) {
+
         User user = userRepository.getUserById(userId);
         if (user == null) throw new ApiException("User not found");
 
         Built old = builtRepository.getBuiltById(builtId);
         if (old == null) throw new ApiException("Built not found");
 
-        if (!old.getUser().getId().equals(userId))
+        if (!user.getRole().equals("ADMIN") &&
+                !old.getUser().getId().equals(userId))
             throw new ApiException("You are not authorized to update this built");
 
         old.setLocation(built.getLocation());
@@ -52,18 +54,22 @@ public class BuiltService {
         builtRepository.save(old);
     }
 
+
     public void delete(Integer builtId, Integer userId) {
+
         User user = userRepository.getUserById(userId);
         if (user == null) throw new ApiException("User not found");
 
         Built built = builtRepository.getBuiltById(builtId);
         if (built == null) throw new ApiException("Built not found");
 
-        if (!built.getUser().getId().equals(userId))
+        if (!user.getRole().equals("ADMIN") &&
+                !built.getUser().getId().equals(userId))
             throw new ApiException("You are not authorized to delete this built");
 
         builtRepository.delete(built);
     }
+
 
     public Built getBuiltById(Integer id) {
         Built built = builtRepository.getBuiltById(id);
