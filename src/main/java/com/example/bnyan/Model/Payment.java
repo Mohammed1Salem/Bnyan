@@ -51,4 +51,10 @@ public class Payment {
         @JsonIgnore
         private Specialist payee;
 
+
+        @PrePersist
+        void onCreate() {
+                this.createdAt = LocalDateTime.now();
+        }
+
 }

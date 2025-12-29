@@ -79,4 +79,17 @@ public class TaskController {
 
         return ResponseEntity.status(200).body(taskService.getTasksByDateRange(startDate, endDate));
     }
+    @GetMapping("/get-by-manager/{managerId}")
+    public ResponseEntity<?> getByManager(@PathVariable Integer managerId) {
+        return ResponseEntity.status(200).body(taskService.getTasksByManager(managerId));
+    }
+    @GetMapping("/get-by-id/{taskId}")
+    public ResponseEntity<?> getById(@PathVariable Integer taskId) {
+        return ResponseEntity.status(200).body(taskService.getTaskById(taskId));
+    }
+    @GetMapping("/get-completed")
+    public ResponseEntity<?> getCompleted() {
+        return ResponseEntity.status(200).body(taskService.getCompletedTasks());
+    }
+
 }
