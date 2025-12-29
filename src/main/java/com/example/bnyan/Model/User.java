@@ -28,6 +28,11 @@ public class User {
     @Column(columnDefinition = "varchar(255) not null")
     private String password;
 
+    @NotEmpty(message = "full name must be filled")
+    @Pattern(regexp = "^[a-zA-Z]+( [a-zA-Z]+)+$", message = "full name must contain only letters and spaces, and at least two words")
+    @Column(columnDefinition = "text not null ")
+    private String fullName;
+
     @NotEmpty(message = "email must be filled")
     @Email(message = "email must be valid")
     @Column(columnDefinition = "varchar(50) not null unique")
