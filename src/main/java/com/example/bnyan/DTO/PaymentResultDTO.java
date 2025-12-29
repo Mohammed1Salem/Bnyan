@@ -1,4 +1,4 @@
-package com.example.bnyan.Model;
+package com.example.bnyan.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentResult {
+public class PaymentResultDTO {
 
     private boolean success;         // true if payment request succeeded
     private String paymentId;        // Moyasar payment ID

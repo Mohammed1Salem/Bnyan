@@ -1,8 +1,8 @@
 package com.example.bnyan.Controller;
 
-import com.example.bnyan.Model.PaymentRequest;
-import com.example.bnyan.Model.PaymentResult;
-import com.example.bnyan.Model.PaymentStatus;
+import com.example.bnyan.DTO.PaymentRequestDTO;
+import com.example.bnyan.DTO.PaymentResultDTO;
+import com.example.bnyan.DTO.PaymentStatusDTO;
 import com.example.bnyan.Service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,14 +16,14 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/create")
-    public ResponseEntity<PaymentResult> create(@RequestBody PaymentRequest request) {
-        PaymentResult result = paymentService.createPayment(request);
+    public ResponseEntity<PaymentResultDTO> create(@RequestBody PaymentRequestDTO request) {
+        PaymentResultDTO result = paymentService.createPayment(request);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/status/{id}")
-    public ResponseEntity<PaymentStatus> status(@PathVariable String id) {
-        PaymentStatus status = paymentService.getPaymentStatus(id);
+    public ResponseEntity<PaymentStatusDTO> status(@PathVariable String id) {
+        PaymentStatusDTO status = paymentService.getPaymentStatus(id);
         return ResponseEntity.ok(status);
     }
 
