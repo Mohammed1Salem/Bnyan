@@ -2,13 +2,14 @@ package com.example.bnyan.Controller;
 import com.example.bnyan.DTO.ProjectAIDTO;
 import com.example.bnyan.DTO.ProjectDTO;
 import com.example.bnyan.Model.Project;
+import com.example.bnyan.Model.User;
 import com.example.bnyan.Service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.bnyan.Api.ApiResponse;
@@ -20,49 +21,57 @@ public class ProjectController {
 
     private final ProjectService projectService;
 
+    //admin
     @GetMapping("/get")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(projectService.getAll());
     }
 
-    @GetMapping("/get-my-projects{customer_id}")
-    public ResponseEntity<?> getMyProjects(@PathVariable Integer customer_id) {
-        return ResponseEntity.ok(projectService.getMyProjects(customer_id));
+    //customer
+    @GetMapping("/get-my-projects")
+    public ResponseEntity<?> getMyProjects(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(projectService.getMyProjects(user.getId()));
     }
 
-    @PostMapping("/add/{customer_id}/{request_id}")
-    public ResponseEntity<?> addProject(@PathVariable Integer customer_id, @PathVariable Integer request_id,@RequestBody ProjectDTO project) {
-        projectService.addProject(customer_id,request_id, project);
+    //customer
+    @PostMapping("/add/{request_id}")
+    public ResponseEntity<?> addProject(@AuthenticationPrincipal User user, @PathVariable Integer request_id,@RequestBody ProjectDTO project) {
+        projectService.addProject(user.getId(), request_id, project);
         return ResponseEntity.ok(new ApiResponse("project added successfully"));
     }
 
-    @PostMapping("/budget/{customer_id}")
-    public ResponseEntity<?> projectBudget(@PathVariable Integer customer_id, @RequestBody ProjectAIDTO project) {
-        return ResponseEntity.ok(projectService.predictBudget(customer_id, project));
+    //customer
+    @PostMapping("/budget/{project_id}")
+    public ResponseEntity<?> projectBudget(@AuthenticationPrincipal User user,@PathVariable Integer project_id, @RequestBody ProjectAIDTO project) {
+        return ResponseEntity.ok(projectService.predictBudget(user.getId(),project_id, project));
     }
 
-    @PostMapping("/time-prediction/{customer_id}")
-    public ResponseEntity<?> projectTime(@PathVariable Integer customer_id, @RequestBody ProjectAIDTO project) {
-        return ResponseEntity.ok(projectService.predictBudget(customer_id, project));
+    //customer
+    @PostMapping("/time-prediction/{project_id}")
+    public ResponseEntity<?> projectTime(@AuthenticationPrincipal User user,@PathVariable Integer project_id, @RequestBody ProjectAIDTO project) {
+        return ResponseEntity.ok(projectService.predictBudget(user.getId(),project_id, project));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProject(@PathVariable Integer id,
+    //customer
+    @PutMapping("/update/{project_id}")
+    public ResponseEntity<?> updateProject(@AuthenticationPrincipal User user,@PathVariable Integer project_id,
                                            @RequestBody Project project) {
-        projectService.updateProject(id, project);
+        projectService.updateProject(user.getId(), project_id, project);
         return ResponseEntity.ok(new ApiResponse("project updated successfully"));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteProject(@PathVariable Integer id) {
-        projectService.deleteProject(id);
+    //customer
+    @DeleteMapping("/delete/{project_id}")
+    public ResponseEntity<?> deleteProject(@AuthenticationPrincipal User user, @PathVariable Integer project_id) {
+        projectService.deleteProject(user.getId(),project_id);
         return ResponseEntity.ok(new ApiResponse("project deleted successfully"));
     }
 
+    //customer
     @PostMapping("/generate-image/{project_id}")
-    public ResponseEntity<?> generateDraft(@PathVariable Integer project_id) {
+    public ResponseEntity<?> generateDraft(@AuthenticationPrincipal User user,@PathVariable Integer project_id) {
 
-        byte[] image = projectService.generateImage(project_id);
+        byte[] image = projectService.generateImage(user.getId(),project_id);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
@@ -71,8 +80,10 @@ public class ProjectController {
                 .body(image);
     }
 
+    //customer + admin
     @GetMapping("/working-on-project/{project_id}")
-    public ResponseEntity<?> getWorkingOnProject(@PathVariable Integer project_id) {
-        return ResponseEntity.ok(projectService.workingOnTheProject(project_id));
+    public ResponseEntity<?> getWorkingOnProject(@AuthenticationPrincipal User user,@PathVariable Integer project_id) {
+        return ResponseEntity.ok(projectService.workingOnTheProject(user.getId(),project_id));
     }
+
 }

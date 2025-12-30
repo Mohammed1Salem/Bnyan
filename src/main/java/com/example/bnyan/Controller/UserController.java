@@ -11,7 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/user")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -22,11 +22,7 @@ public class UserController {
         return ResponseEntity.status(200).body(userService.get());
     }
 
-    @PostMapping("/register-customer")
-    public ResponseEntity<?> registerCustomer(@RequestBody @Valid CustomerDTO customerDTO) {
-        userService.registerCustomer(customerDTO);
-        return ResponseEntity.status(200).body(new ApiResponse("Customer registered successfully"));
-    }
+
     @PutMapping("/update")
     public ResponseEntity<?> update(
             @AuthenticationPrincipal User user,

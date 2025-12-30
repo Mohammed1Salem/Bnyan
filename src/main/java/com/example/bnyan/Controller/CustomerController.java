@@ -1,14 +1,17 @@
 package com.example.bnyan.Controller;
 
+import com.example.bnyan.Api.ApiResponse;
+import com.example.bnyan.DTO.CustomerDTO;
 import com.example.bnyan.DTO.QuestionDTO;
 import com.example.bnyan.Model.User;
 import com.example.bnyan.Service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@RequestMapping("api/v1/customer")
+@RequestMapping("/api/v1/customer")
 @RequiredArgsConstructor
 public class CustomerController {
 
@@ -17,6 +20,13 @@ public class CustomerController {
     @GetMapping("/get")
     public ResponseEntity<?> get() {
         return ResponseEntity.ok(customerService.get());
+    }
+
+
+    @PostMapping("/register-customer")
+    public ResponseEntity<?> registerCustomer(@RequestBody @Valid CustomerDTO customerDTO) {
+        customerService.registerCustomer(customerDTO);
+        return ResponseEntity.status(200).body(new ApiResponse("Customer registered successfully"));
     }
 
     @GetMapping("/get-by-id")
