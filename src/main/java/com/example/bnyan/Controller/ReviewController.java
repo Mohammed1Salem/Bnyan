@@ -59,4 +59,5 @@ public class ReviewController {
     public ResponseEntity<?> getById(@PathVariable Integer id) {
         return ResponseEntity.status(200).body(reviewService.getReviewById(id));
     }
+
 }

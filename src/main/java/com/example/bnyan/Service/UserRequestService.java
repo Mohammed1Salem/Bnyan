@@ -29,31 +29,39 @@ public class UserRequestService {
         return userRequests;
     }
 
-    public void add(Integer customerId, Integer builtId, UserRequest userRequest) {
-        Customer customer = customerRepository.getCustomerById(customerId);
+    public void add(Integer userId, Integer builtId, UserRequest userRequest) {
+
+        Customer customer = customerRepository.getCustomerByUserId(userId);
         if (customer == null) throw new ApiException("Customer not found");
 
         Built built = builtRepository.getBuiltById(builtId);
         if (built == null) throw new ApiException("Built not found");
 
-        if (userRequest.getType().equalsIgnoreCase("شراء") && !built.getStatus().equalsIgnoreCase("forSell"))
+        if (userRequest.getType().equalsIgnoreCase("شراء") &&
+                !built.getStatus().equalsIgnoreCase("forSell"))
             throw new ApiException("This built is not for sale");
 
-        if (userRequest.getType().equalsIgnoreCase("إيجار") && !built.getStatus().equalsIgnoreCase("forRent"))
+        if (userRequest.getType().equalsIgnoreCase("إيجار") &&
+                !built.getStatus().equalsIgnoreCase("forRent"))
             throw new ApiException("This built is not for rent");
 
         userRequest.setBuilt(built);
         userRequest.setCustomer(customer);
         userRequest.setStatus("pending");
         userRequest.setCreatedAt(LocalDateTime.now());
-        userRequestRepository.save(userRequest);
 
+        userRequestRepository.save(userRequest);
         sendUserRequestNotification(customer, built, userRequest);
     }
 
-    public void acceptRequest(Integer requestId) {
+
+    public void acceptRequest(Integer requestId, Integer userId) {
+
         UserRequest userRequest = userRequestRepository.getUserRequestById(requestId);
         if (userRequest == null) throw new ApiException("User request not found");
+
+        if (!userRequest.getBuilt().getUser().getId().equals(userId))
+            throw new ApiException("Not authorized");
 
         if (!userRequest.getStatus().equalsIgnoreCase("pending"))
             throw new ApiException("Only pending requests can be accepted");
@@ -62,17 +70,20 @@ public class UserRequestService {
         userRequestRepository.save(userRequest);
 
         Built built = userRequest.getBuilt();
-        if (userRequest.getType().equalsIgnoreCase("شراء") || userRequest.getType().equalsIgnoreCase("إيجار")) {
-            built.setStatus("owned");
-            builtRepository.save(built);
-        }
+        built.setStatus("owned");
+        builtRepository.save(built);
 
         sendAcceptNotification(userRequest);
     }
 
-    public void rejectRequest(Integer requestId) {
+
+    public void rejectRequest(Integer requestId, Integer userId) {
+
         UserRequest userRequest = userRequestRepository.getUserRequestById(requestId);
         if (userRequest == null) throw new ApiException("User request not found");
+
+        if (!userRequest.getBuilt().getUser().getId().equals(userId))
+            throw new ApiException("Not authorized");
 
         if (!userRequest.getStatus().equalsIgnoreCase("pending"))
             throw new ApiException("Only pending requests can be rejected");
@@ -83,18 +94,18 @@ public class UserRequestService {
         sendRejectNotification(userRequest);
     }
 
-    public void delete(Integer requestId, Integer customerId) {
-        Customer customer = customerRepository.getCustomerById(customerId);
-        if (customer == null) throw new ApiException("Customer not found");
+
+    public void delete(Integer requestId, Integer userId) {
 
         UserRequest userRequest = userRequestRepository.getUserRequestById(requestId);
         if (userRequest == null) throw new ApiException("User request not found");
 
-        if (!userRequest.getCustomer().getId().equals(customerId))
+        if (!userRequest.getCustomer().getUser().getId().equals(userId))
             throw new ApiException("You are not authorized to delete this request");
 
         userRequestRepository.delete(userRequest);
     }
+
 
     public UserRequest getUserRequestById(Integer id) {
         UserRequest userRequest = userRequestRepository.getUserRequestById(id);

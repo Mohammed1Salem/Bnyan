@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class PaymentService {
 
-    @Value("${moyasar.api.key}")
+    @Value("${MOYASSER_API_KEY}")
     private String apiKey;
 
     private static final String MOYASAR_API_URL =
