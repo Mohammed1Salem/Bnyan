@@ -26,48 +26,57 @@ public class SpecialistRequestService {
         return requestRepository.findAll();
     }
 
-    public void addSpecialistRequest(Integer user_id, Integer project_id, Integer spec_id) {
-
+    public void addSpecialistRequest(Integer user_id, Integer project_id, Integer spec_id, SpecialistRequest requestBody) {
         User user = userRepository.getUserById(user_id);
-        if(user==null){
+        if (user == null) {
             throw new ApiException("user not found");
         }
 
         Customer customer = customerRepository.getCustomerById(user_id);
-        if(customer==null){
+        if (customer == null) {
             throw new ApiException("only customer can make this process");
         }
 
         Project project = projectRepository.findProjectById(project_id);
+        if (project == null) {
+            throw new ApiException("project not found");
+        }
 
-        if(project.getCustomer().getId()!=customer.getId()){
+        if (project.getCustomer().getId() != customer.getId()) {
             throw new ApiException("unauthorized access");
         }
 
         Specialist specialist = specialistRepository.findSpecialistById(spec_id);
-
-        if (project == null || specialist == null) {
-            throw new ApiException("this project request can not be assigned to the specialist");
+        if (specialist == null) {
+            throw new ApiException("specialist not found");
         }
 
+        // Create and save the request with ALL required fields from requestBody
         SpecialistRequest request = new SpecialistRequest();
-
         request.setProject(project);
         request.setSpecialist(specialist);
-        project.getRequests().add(request);
-        specialist.getRequests().add(request);
-
-        projectRepository.save(project);
-        specialistRepository.save(specialist);
-
         request.setProjectExpectedEndDate(project.getExpectedEndDate());
         request.setCreated_at(LocalDateTime.now());
         request.setStatus("pending");
-        requestRepository.save(request);
+
+        // Get the required validated fields from requestBody
+        request.setDescription(requestBody.getDescription());
+        request.setExpectedStartDate(requestBody.getExpectedStartDate());
+        request.setOfferedPrice(requestBody.getOfferedPrice());
+
+        // Save the request first to generate its ID
+        request = requestRepository.save(request);
+
+        // Now add the request to the collections (bidirectional relationship)
+        project.getRequests().add(request);
+        specialist.getRequests().add(request);
+
+        // Save the parent entities
+        projectRepository.save(project);
+        specialistRepository.save(specialist);
 
         sendSpecialistRequestNotification(specialist, project, request);
     }
-
     public void acceptRequest(Integer user_id,Integer requestId) {
         User user = userRepository.getUserById(user_id);
             if(user==null){
@@ -222,7 +231,7 @@ public class SpecialistRequestService {
 
     // n8n Webhooks
     private void sendSpecialistRequestNotification(Specialist specialist, Project project, SpecialistRequest request) {
-        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/specialist-request-created";
+        String webhookUrl = "http://localhost:5678/webhook-test/specialist-request-created";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", request.getId());
@@ -238,9 +247,6 @@ public class SpecialistRequestService {
         payload.put("projectName", project.getDescription());
         payload.put("projectBudget", project.getBudget());
         payload.put("projectStage", project.getTask());
-        payload.put("projectManagerName", project.getProjectManager().getUser().getUsername());
-        payload.put("projectManagerEmail", project.getProjectManager().getUser().getEmail());
-        payload.put("projectManagerPhone", project.getProjectManager().getUser().getPhoneNumber());
         payload.put("createdAt", request.getCreated_at().toString());
 
         try {
@@ -251,7 +257,7 @@ public class SpecialistRequestService {
     }
 
     private void sendAcceptNotification(SpecialistRequest request) {
-        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/specialist-request-accepted";
+        String webhookUrl = "http://localhost:5678/webhook-test/specialist-request-accepted";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", request.getId());
@@ -263,9 +269,6 @@ public class SpecialistRequestService {
         payload.put("specialistSpeciality", request.getSpecialist().getSpeciality());
         payload.put("projectName", request.getProject().getDescription());
         payload.put("projectBudget", request.getProject().getBudget());
-        payload.put("projectManagerName", request.getProject().getProjectManager().getUser().getUsername());
-        payload.put("projectManagerEmail", request.getProject().getProjectManager().getUser().getEmail());
-        payload.put("projectManagerPhone", request.getProject().getProjectManager().getUser().getPhoneNumber());
         payload.put("acceptedAt", LocalDateTime.now().toString());
 
         try {
@@ -276,7 +279,7 @@ public class SpecialistRequestService {
     }
 
     private void sendRejectNotification(SpecialistRequest request) {
-        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/specialist-request-rejected";
+        String webhookUrl = "http://localhost:5678/webhook-test/specialist-request-rejected";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", request.getId());
@@ -288,9 +291,6 @@ public class SpecialistRequestService {
         payload.put("specialistSpeciality", request.getSpecialist().getSpeciality());
         payload.put("projectName", request.getProject().getDescription());
         payload.put("projectBudget", request.getProject().getBudget());
-        payload.put("projectManagerName", request.getProject().getProjectManager().getUser().getUsername());
-        payload.put("projectManagerEmail", request.getProject().getProjectManager().getUser().getEmail());
-        payload.put("projectManagerPhone", request.getProject().getProjectManager().getUser().getPhoneNumber());
         payload.put("rejectedAt", LocalDateTime.now().toString());
 
         try {

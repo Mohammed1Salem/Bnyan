@@ -27,26 +27,19 @@ public class SpecialistRequestController {
     }
 
     //customer
-    @PostMapping("/add/{projectId}/{specialistId}")
-    public ResponseEntity<?> addRequest(@AuthenticationPrincipal User user,
-                                        @PathVariable Integer projectId,
-                                        @PathVariable Integer specialistId) {
-        specialistRequestService.addSpecialistRequest(user.getId(), projectId, specialistId);
-        return ResponseEntity.status(200).body(new ApiResponse("Specialist request added"));
+    @PostMapping("/add/{project_id}/{spec_id}")
+    public ResponseEntity addSpecialistRequest(@AuthenticationPrincipal User user,
+                                               @PathVariable Integer project_id,
+                                               @PathVariable Integer spec_id,
+                                               @Valid @RequestBody SpecialistRequest requestBody) {
+        specialistRequestService.addSpecialistRequest(user.getId(), project_id, spec_id, requestBody);
+        return ResponseEntity.status(200).body(new ApiResponse("Specialist request added successfully"));
     }
-
     //specialist
     @PutMapping("/accept/{requestId}")
     public ResponseEntity<?> acceptRequest(@AuthenticationPrincipal User user, @PathVariable Integer requestId) {
         specialistRequestService.acceptRequest(user.getId(),requestId);
         return ResponseEntity.status(200).body(new ApiResponse("Specialist request accepted"));
-    }
-
-    //customer
-    @PutMapping("/add-specialist/{project_id}/{spec_id}")
-    public ResponseEntity<?> addSpecialistRequest(@AuthenticationPrincipal User user,@PathVariable Integer project_id, @PathVariable Integer spec_id) {
-        specialistRequestService.addSpecialistRequest(user.getId(), project_id, spec_id);
-        return ResponseEntity.ok(new ApiResponse("request added successfully"));
     }
 
     //customer

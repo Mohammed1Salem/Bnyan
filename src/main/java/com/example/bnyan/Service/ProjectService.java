@@ -90,15 +90,6 @@ public class ProjectService {
             aiDTO.setBudget(projectDTO.getBudget());
         }
 
-        // if user did not specify time AI will
-        if(projectDTO.getProjectPeriod()==null){
-            PredictionTimeDTO timeDTO = predictTime(user_id,project.getId(),aiDTO);
-            project.setDuration(timeDTO.getExpectedProjectPeriod());
-            project.setExpectedEndDate(projectDTO.getStartDate().plusDays(projectDTO.getProjectPeriod()));
-        }else{
-            project.setDuration(projectDTO.getProjectPeriod());
-            project.setExpectedEndDate(projectDTO.getStartDate().plusDays(projectDTO.getProjectPeriod()));
-        }
 
         project.setDescription(projectDTO.getDescription());
         project.setStartDate(projectDTO.getStartDate());

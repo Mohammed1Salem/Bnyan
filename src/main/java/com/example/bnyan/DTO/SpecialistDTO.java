@@ -21,9 +21,7 @@ public class SpecialistDTO {
 
     // user name like Ahmed Ali
     @NotEmpty(message = "username must be filled")
-    @Pattern(regexp = "^[A-Za-z]{3,20}( [A-Za-z]{3,20})+$",
-            message = "fullName must contain only letters and a space between first and last name")
-    private String fullName;
+     private String fullName;
 
     @NotEmpty(message = "email must be filled")
     @Email(message = "email must be valid")

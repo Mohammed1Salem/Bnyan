@@ -25,7 +25,7 @@ public class BuildRequest {
     //@NotEmpty(message = "status must be filled")
     @Pattern(regexp = "^(PROCESSING|APPROVED|REJECTED|PREPARING)$",
             message = "status must be PROCESSING, APPROVED, REJECTED, or PREPARING")
-    @Column(columnDefinition = "varchar(20) not null")
+    @Column(columnDefinition = "varchar(20)")
     private String status;
 
     @Column(columnDefinition = "datetime default current_timestamp")

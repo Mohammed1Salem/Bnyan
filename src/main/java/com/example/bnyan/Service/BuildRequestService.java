@@ -66,7 +66,6 @@ public class BuildRequestService {
         Project project = new Project();
         project.setDescription(projectDTO.getDescription());
         project.setBudget(projectDTO.getBudget());
-        project.setDuration(projectDTO.getDuration());
         project.setStartDate(projectDTO.getStartDate());
         project.setExpectedEndDate(projectDTO.getExpectedEndDate());
         project.setStatus("preparing");

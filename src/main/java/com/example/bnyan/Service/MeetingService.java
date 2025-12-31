@@ -67,7 +67,7 @@ public class MeetingService {
     }
     private String createZoomMeeting(Meeting meeting) {
 
-        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/zoom-meeting";
+        String webhookUrl = "http://localhost:5678/webhook-test/zoom-meeting";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("topic", meeting.getTopic());
@@ -95,7 +95,7 @@ public class MeetingService {
             Meeting meeting
     ) {
 
-        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/meeting-email";
+        String webhookUrl = "http://localhost:5678/webhook-test/meeting-email";
 
         HashMap<String, Object> payload = new HashMap<>();
 
