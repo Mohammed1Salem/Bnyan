@@ -220,7 +220,7 @@ public class SpecialistRequestService {
 
     // n8n Webhooks
     private void sendSpecialistRequestNotification(Specialist specialist, Project project, SpecialistRequest request) {
-        String webhookUrl = "http://localhost:5678/webhook/specialist-request-created";
+        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/specialist-request-created";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", request.getId());
@@ -249,7 +249,7 @@ public class SpecialistRequestService {
     }
 
     private void sendAcceptNotification(SpecialistRequest request) {
-        String webhookUrl = "http://localhost:5678/webhook/specialist-request-accepted";
+        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/specialist-request-accepted";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", request.getId());
@@ -274,7 +274,7 @@ public class SpecialistRequestService {
     }
 
     private void sendRejectNotification(SpecialistRequest request) {
-        String webhookUrl = "http://localhost:5678/webhook/specialist-request-rejected";
+        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/specialist-request-rejected";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", request.getId());

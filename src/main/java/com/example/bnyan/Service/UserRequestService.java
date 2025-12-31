@@ -136,7 +136,7 @@ public class UserRequestService {
 
     // n8n Webhooks
     private void sendUserRequestNotification(Customer customer, Built built, UserRequest userRequest) {
-        String webhookUrl = "http://localhost:5678/webhook/user-request-created";
+        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/user-request-created";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", userRequest.getId());
@@ -163,7 +163,7 @@ public class UserRequestService {
     }
 
     private void sendAcceptNotification(UserRequest userRequest) {
-        String webhookUrl = "http://localhost:5678/webhook/user-request-accepted";
+        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/user-request-accepted";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", userRequest.getId());
@@ -187,7 +187,7 @@ public class UserRequestService {
     }
 
     private void sendRejectNotification(UserRequest userRequest) {
-        String webhookUrl = "http://localhost:5678/webhook/user-request-rejected";
+        String webhookUrl = "https://mastie.app.n8n.cloud/webhook-test/user-request-rejected";
 
         HashMap<String, Object> payload = new HashMap<>();
         payload.put("requestId", userRequest.getId());
