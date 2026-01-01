@@ -4,6 +4,7 @@ import com.example.bnyan.DTO.ProjectManagerDTO;
 import com.example.bnyan.DTO.SpecialistDTO;
 import com.example.bnyan.Model.*;
 import com.example.bnyan.Repository.ProjectManagerRepository;
+import com.example.bnyan.Repository.SpecialistRepository;
 import com.example.bnyan.Repository.SpecialistRequestRepository;
 import com.example.bnyan.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class ProjectManagerService {
     private final ProjectManagerRepository projectManagerRepository;
     private final UserRepository userRepository;
     private final SpecialistRequestRepository specialistRequestRepository;
+    private final SpecialistRepository specialistRepository;
 
     public List<ProjectManager> getAll() {
         return projectManagerRepository.findAll();
@@ -43,6 +45,10 @@ public class ProjectManagerService {
         user.setRole("SPECIALIST");
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
+
+        Specialist specialist = new Specialist();
+        specialist.setSpeciality("PROJECT_MANAGER");
+        specialistRepository.save(specialist);
 
         ProjectManager projectManager =new ProjectManager();
         projectManager.setSpeciality("PROJECT_MANAGER");

@@ -20,8 +20,6 @@ public class CustomerDTO {
 
     // user name like Ahmed Ali
     @NotEmpty(message = "user full name must be filled")
-    @Pattern(regexp = "^[A-Za-z]{3,20}( [A-Za-z]{3,20})+$",
-            message = "fullName must contain only letters and a space between first and last name")
     private String fullName;
 
     @NotEmpty(message = "email must be filled")

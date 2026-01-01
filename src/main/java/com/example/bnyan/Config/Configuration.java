@@ -33,7 +33,6 @@ public class Configuration {
                                                 "/api/v1/user/get-by-username/**",
                                                 "/api/v1/user/get-by-role/**",
                                                 "/api/v1/domain/get",
-                                                "/api/v1/specialist/get",
                                                 "/api/v1/specialist/delete/{specialist_id}",
                                                 "/api/v1/project/get",
                                                 "/api/v1/specialist-request/get",
@@ -72,9 +71,8 @@ public class Configuration {
 
                                         .requestMatchers(
                                                 "/api/v1/user-request/accept/**",
-                                                "/api/v1/user-request/reject/**",
-                                                "/api/v1/specialist/update/{spec_id}"
-                                        ).hasAnyAuthority("SPECIALIST", "ADMIN")
+                                                "/api/v1/user-request/reject/**"
+                                        ).hasAnyAuthority("USER", "ADMIN")
 
                                 // CUSTOMER
                                 .requestMatchers("/api/v1/customer/register-customer").permitAll()
@@ -110,7 +108,8 @@ public class Configuration {
                                         "/api/v1/specialist-request/reject/{request_id}",
                                         "/api/v1/specialist-request/accept/{request_id}",
                                         "/api/v1/project-manager/accept-request/{request_id}",
-                                        "/api/v1/project-manager/reject-request/{request_id}"
+                                        "/api/v1/project-manager/reject-request/{request_id}",
+                                        "/api/v1/specialist/update/{spec_id}"
                                 ).hasAuthority("SPECIALIST")
 
                                 .requestMatchers(
@@ -164,7 +163,7 @@ public class Configuration {
                                 .hasAnyAuthority("USER", "ADMIN")
 
 
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
                         )
 
                                 .logout(logout -> logout.logoutUrl("/api/v1/user/logout").deleteCookies("JSESSIONID").invalidateHttpSession(true))

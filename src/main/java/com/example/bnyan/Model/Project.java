@@ -39,9 +39,6 @@ public class Project {
     @Column
     private LocalDate startDate;
 
-   // @Positive(message = "duration must be a positive value")
-   @Column
-    private Integer duration;
 
     @Pattern(regexp = "^(preparing|on going|completed)")
     private String status;
@@ -63,7 +60,6 @@ public class Project {
     private ProjectManager projectManager;
 
     @ManyToOne
-    @MapsId
     @JsonIgnore
     private Customer customer;
 
