@@ -263,6 +263,9 @@ Team Member	Role	Responsibilities	Key Contributions
 🔹 n8n full development and integration
 🔹 7 Email sending webhook
 🔹 n8n Zoom webook
+🔹 Helped with Ai chat
+🔹 Designed Diagrams
+🔹 UI Figma
 
 
 
